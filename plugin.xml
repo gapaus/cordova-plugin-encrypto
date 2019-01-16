@@ -20,4 +20,15 @@
         <source-file src="src/android/Encrypto.java" target-dir="src/com/encryptotel/encrypto"/>
     </platform>
 
+    <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="Encrypto">
+                <param name="ios-package" value="Encrypto" />
+            </feature>
+        </config-file>
+        <framework src="Security.framework" />
+        <source-file src="src/ios/Encrypto.swift" />
+        <dependency id="cordova-plugin-add-swift-support" version="1.7.1"/>
+    </platform>
+
 </plugin>
