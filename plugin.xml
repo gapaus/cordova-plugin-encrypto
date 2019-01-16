@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="cordova-plugin-encrypto" version="0.2.3">
+    <name>Encrypto</name>
+    <description>Cordova Encrypto Plugin</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,encrypto</keywords>
+    <repo>https://github.com/gapaus/cordova-plugin-encrypto.git</repo>
+
+    <js-module src="www/encrypto.js" name="encrypto">
+        <clobbers target="encrypto"/>
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="Encrypto">
+                <param name="android-package" value="org.apache.cordova.encrypto"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/Encrypto.java" target-dir="src/org/apache/cordova/encrypto"/>
+    </platform>
+
+    <!-- ios -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="Encrypto">
+                <param name="ios-package" value="CDVEncrypto"/>
+            </feature>
+        </config-file>
+        <header-file src="src/ios/CDVEncrypto.h"/>
+        <source-file src="src/ios/CDVEncrypto.m"/>
+    </platform>
+
+</plugin>
