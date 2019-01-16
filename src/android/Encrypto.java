@@ -50,7 +50,7 @@ public class Encrypto extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if ("decrypt".equals(action)) {
             JSONObject r = new JSONObject();
-//            r.put("uuid", Device.uuid);
+            r.put("uuid", Device.uuid);
             callbackContext.success(r);
         }
         else {
