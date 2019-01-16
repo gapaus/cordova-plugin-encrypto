@@ -1,0 +1,27 @@
+{
+  "name": "cordova-plugin-encrypto",
+  "version": "0.0.1",
+  "description": "Cordova Encrypto Plugin",
+  "cordova": {
+    "id": "cordova-plugin-encrypto",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gapaus/cordova-plugin-encrypto.git"
+  },
+  "keywords": [
+    "cordova",
+    "encrypto",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "gapaus",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/gapaus/cordova-plugin-encrypto/issues"
+  },
+  "homepage": "https://github.com/gapaus/cordova-plugin-encrypto#readme"
+}
