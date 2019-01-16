@@ -1,66 +1,78 @@
-package org.apache.cordova.encrypto;
+package com.ideas2it.aes256;
 
-import java.util.TimeZone;
+import android.util.Base64;
 
-import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.CordovaInterface;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import android.provider.Settings;
+import java.security.SecureRandom;
+import java.security.spec.KeySpec;
+import java.util.Random;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import shaded.org.apache.commons.codec.binary.Hex;
 
 public class Encrypto extends CordovaPlugin {
-    public static final String TAG = "Encrypto";
 
-    public static String uuid;                                // Device UUID
+    private static final String DECRYPT = "decrypt";
 
-    private static final String ANDROID_PLATFORM = "Android";
-    private static final String AMAZON_PLATFORM = "amazon-fireos";
-    private static final String AMAZON_DEVICE = "Amazon";
+    private static final String CIPHER_TRANSFORMATION = "AES/CBC/PKCS5PADDING";
+    private static final int PBKDF2_ITERATION_COUNT = 1001;
+    private static final int PBKDF2_KEY_LENGTH = 256;
+    private static final int SECURE_IV_LENGTH = 64;
+    private static final int SECURE_KEY_LENGTH = 128;
+    private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
+    private static final String PBKDF2_SALT = "hY0wTq6xwc6ni01G";
+    private static final Random RANDOM = new SecureRandom();
 
-    /**
-     * Constructor.
-     */
-    public Encrypto() {
-    }
-
-    /**
-     * Sets the context of the Command. This can then be used to do things like
-     * get file paths associated with the Activity.
-     *
-     * @param cordova The context of the main Activity.
-     * @param webView The CordovaWebView Cordova is running in.
-     */
-    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
-        super.initialize(cordova, webView);
-        Encrypto.uuid = 'test';
-    }
-
-    /**
-     * Executes the request and returns PluginResult.
-     *
-     * @param action            The action to execute.
-     * @param args              JSONArry of arguments for the plugin.
-     * @param callbackContext   The callback id used when calling back into JavaScript.
-     * @return                  True if the action was valid, false if not.
-     */
+    @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if ("decrypt".equals(action)) {
-            JSONObject r = new JSONObject();
-            r.put("uuid", Device.uuid);
-            callbackContext.success(r);
+        try {
+            if (DECRYPT.equalsIgnoreCase(action)) {
+                String privateKey = args.getString(0);
+                String message = args.getString(1);
+                callbackContext.success(decrypt(privateKey, message));
+                return true;
+            } else {
+                callbackContext.error("Invalid method call");
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println("Error occurred while performing " + action + " : " + e.getMessage());
+            callbackContext.error("Error occurred while performing " + action);
         }
-        else {
-            return false;
-        }
-        return true;
+        return false;
     }
 
-    //--------------------------------------------------------------------------
-    // LOCAL METHODS
-    //--------------------------------------------------------------------------
+    /**
+     * @param secureKey A 32 bytes string, which will used as input key for Encrypto decryption
+     * @param value     A 16 bytes string, which will used as initial vector for Encrypto decryption
+     * @param iv        An Encrypto encrypted data which will be decrypted
+     * @return AES Decrypted string
+     * @throws Exception
+     */
+    private String decrypt(String privateKey, String message) throws Exception {
+//        byte[] pbkdf2SecuredKey = generatePBKDF2(secureKey.toCharArray(), PBKDF2_SALT.getBytes("UTF-8"),
+//                PBKDF2_ITERATION_COUNT, PBKDF2_KEY_LENGTH);
+//
+//        IvParameterSpec ivParameterSpec = new IvParameterSpec(iv.getBytes("UTF-8"));
+//        SecretKeySpec secretKeySpec = new SecretKeySpec(pbkdf2SecuredKey, "AES");
+//
+//        Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
+//        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
+//
+//        byte[] original = cipher.doFinal(Base64.decode(value, Base64.DEFAULT));
+//
+//        return new String(original);
+        return "test";
+    }
 
- }
+}
