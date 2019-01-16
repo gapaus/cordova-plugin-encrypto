@@ -23,14 +23,14 @@
     </platform>
 
     <!-- ios -->
-    <platform name="ios">
-        <config-file target="config.xml" parent="/*">
-            <feature name="Encrypto">
-                <param name="ios-package" value="CDVEncrypto"/>
-            </feature>
-        </config-file>
-        <header-file src="src/ios/CDVEncrypto.h"/>
-        <source-file src="src/ios/CDVEncrypto.m"/>
-    </platform>
+    <!--<platform name="ios">-->
+        <!--<config-file target="config.xml" parent="/*">-->
+            <!--<feature name="Encrypto">-->
+                <!--<param name="ios-package" value="CDVEncrypto"/>-->
+            <!--</feature>-->
+        <!--</config-file>-->
+        <!--<header-file src="src/ios/CDVEncrypto.h"/>-->
+        <!--<source-file src="src/ios/CDVEncrypto.m"/>-->
+    <!--</platform>-->
 
 </plugin>
