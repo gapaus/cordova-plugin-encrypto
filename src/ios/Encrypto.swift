@@ -1,4 +1,4 @@
-@objc(AES256) class Encrypto : CDVPlugin {
+@objc(Encrypto) class Encrypto : CDVPlugin {
     
     func decrypt(_ command: CDVInvokedUrlCommand) {
         var pluginResult = CDVPluginResult(
