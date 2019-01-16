@@ -131,7 +131,8 @@ public class Encrypto extends CordovaPlugin {
         byte[] iv = decrypt(encIv, privateKey);
 
         byte[] encData = copyOf(messageArr, 512, messageArr.length - 512);
-        String data = decrypt(sessionKey, iv, encData);
+        String data = decrypt(sessionKey, iv, encData).trim();
+//        System.out.println(data);
 
         return data;
     }
