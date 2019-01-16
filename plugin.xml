@@ -29,7 +29,7 @@
         <header-file src="src/ios/Encrypto-Plugin-Bridging-Header.h" />
         <framework src="Security.framework" />
         <source-file src="src/ios/Encrypto.swift" />
-        <source-file src="src/ios/SwCrypt.swift" />
+        <!--<source-file src="src/ios/SwCrypt.swift" />-->
         <dependency id="cordova-plugin-add-swift-support" version="1.7.1"/>
     </platform>
 
