@@ -13,7 +13,7 @@
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="Encrypto">
-                <param name="android-package" value="com.encryptotel.encrypto"/>
+                <param name="android-package" value="com.encryptotel.encrypto.Encrypto"/>
             </feature>
         </config-file>
 

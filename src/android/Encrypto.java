@@ -1,37 +1,23 @@
-package com.ideas2it.aes256;
-
-import android.util.Base64;
+package com.encryptotel.encrypto;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.security.SecureRandom;
-import java.security.spec.KeySpec;
-import java.util.Random;
-
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
-
-import shaded.org.apache.commons.codec.binary.Hex;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
 public class Encrypto extends CordovaPlugin {
 
     private static final String DECRYPT = "decrypt";
-
-    private static final String CIPHER_TRANSFORMATION = "AES/CBC/PKCS5PADDING";
-    private static final int PBKDF2_ITERATION_COUNT = 1001;
-    private static final int PBKDF2_KEY_LENGTH = 256;
-    private static final int SECURE_IV_LENGTH = 64;
-    private static final int SECURE_KEY_LENGTH = 128;
-    private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
-    private static final String PBKDF2_SALT = "hY0wTq6xwc6ni01G";
-    private static final Random RANDOM = new SecureRandom();
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -52,27 +38,37 @@ public class Encrypto extends CordovaPlugin {
         return false;
     }
 
+    public static PrivateKey getPrivateKey(String base64PrivateKey){
+        PrivateKey privateKey = null;
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(base64PrivateKey.getBytes()));
+        KeyFactory keyFactory = null;
+        try {
+            keyFactory = KeyFactory.getInstance("RSA");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        try {
+            privateKey = keyFactory.generatePrivate(keySpec);
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        return privateKey;
+    }
+
+    public static String decrypt(byte[] data, PrivateKey privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        return new String(cipher.doFinal(data));
+    }
+
     /**
-     * @param secureKey A 32 bytes string, which will used as input key for Encrypto decryption
-     * @param value     A 16 bytes string, which will used as initial vector for Encrypto decryption
-     * @param iv        An Encrypto encrypted data which will be decrypted
-     * @return AES Decrypted string
+     * @param privateKey
+     * @param message
+     * @return Decrypted string
      * @throws Exception
      */
-    private String decrypt(String privateKey, String message) throws Exception {
-//        byte[] pbkdf2SecuredKey = generatePBKDF2(secureKey.toCharArray(), PBKDF2_SALT.getBytes("UTF-8"),
-//                PBKDF2_ITERATION_COUNT, PBKDF2_KEY_LENGTH);
-//
-//        IvParameterSpec ivParameterSpec = new IvParameterSpec(iv.getBytes("UTF-8"));
-//        SecretKeySpec secretKeySpec = new SecretKeySpec(pbkdf2SecuredKey, "AES");
-//
-//        Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
-//        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
-//
-//        byte[] original = cipher.doFinal(Base64.decode(value, Base64.DEFAULT));
-//
-//        return new String(original);
-        return "test";
+    public static String decrypt(String base64PrivateKey, String data) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+        return decrypt(Base64.getDecoder().decode(data.getBytes()), getPrivateKey(base64PrivateKey));
     }
 
 }
