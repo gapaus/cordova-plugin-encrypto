@@ -1,8 +1,5 @@
 package com.encryptotel.encrypto;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
@@ -16,7 +13,7 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Base64;
+import android.util.Base64;
 
 import java.nio.charset.Charset;
 
@@ -24,7 +21,6 @@ public class Encrypto extends CordovaPlugin {
 
     private static final String DECRYPT = "decrypt";
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         try {
@@ -44,11 +40,14 @@ public class Encrypto extends CordovaPlugin {
         return false;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static byte[] decodeBase64(String message) {
+        return Base64.decode(message, Base64.DEFAULT);
+    }
+
     public static PrivateKey getPrivateKey(String base64PrivateKey) {
         PrivateKey privateKey = null;
 
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(base64PrivateKey.getBytes()));
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodeBase64(base64PrivateKey));
         KeyFactory keyFactory = null;
         try {
             keyFactory = KeyFactory.getInstance("RSA");
@@ -106,7 +105,6 @@ public class Encrypto extends CordovaPlugin {
      * @param message          Encrypted string
      * @return Decrypted string
      */
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public static String decrypt(String base64PrivateKey, String message) throws Exception {
         String str1 = "-----BEGIN RSA PRIVATE KEY-----";
         int idx1 = base64PrivateKey.indexOf(str1);
@@ -122,7 +120,7 @@ public class Encrypto extends CordovaPlugin {
         base64PrivateKey = base64PrivateKey.replaceAll("\n", "");
         PrivateKey privateKey = getPrivateKey(base64PrivateKey);
 
-        byte[] messageArr = Base64.getDecoder().decode(message.getBytes());
+        byte[] messageArr = decodeBase64(message);
 
         byte[] encSessionKey = copyOf(messageArr, 0, 256);
         byte[] sessionKey = decrypt(encSessionKey, privateKey);
