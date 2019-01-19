@@ -47,6 +47,11 @@ public class Encrypto extends CordovaPlugin {
     public static PrivateKey getPrivateKey(String base64PrivateKey) {
         PrivateKey privateKey = null;
 
+        base64PrivateKey = base64PrivateKey.replace("-----BEGIN RSA PRIVATE KEY-----", "");
+        base64PrivateKey = base64PrivateKey.replace("-----END RSA PRIVATE KEY-----", "");
+        base64PrivateKey = base64PrivateKey.replaceAll("\r", "");
+        base64PrivateKey = base64PrivateKey.replaceAll("\n", "");
+
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodeBase64(base64PrivateKey));
         KeyFactory keyFactory = null;
         try {
@@ -106,18 +111,6 @@ public class Encrypto extends CordovaPlugin {
      * @return Decrypted string
      */
     public static String decrypt(String base64PrivateKey, String message) throws Exception {
-        String str1 = "-----BEGIN RSA PRIVATE KEY-----";
-        int idx1 = base64PrivateKey.indexOf(str1);
-        if (idx1 != -1) {
-            base64PrivateKey = base64PrivateKey.substring(str1.length());
-        }
-        String str2 = "-----END RSA PRIVATE KEY-----";
-        int idx2 = base64PrivateKey.indexOf(str2);
-        if (idx1 != -1) {
-            base64PrivateKey = base64PrivateKey.substring(0, idx2);
-        }
-        base64PrivateKey = base64PrivateKey.replaceAll("\r", "");
-        base64PrivateKey = base64PrivateKey.replaceAll("\n", "");
         PrivateKey privateKey = getPrivateKey(base64PrivateKey);
 
         byte[] messageArr = decodeBase64(message);
